@@ -1,3 +1,5 @@
+package rectangle_task;
+
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -29,7 +31,7 @@ public class Main {
 //        System.out.println("Введите высоту");
 //        int height = scanner.nextInt();
 //
-//        Rectangle rectangle = new Rectangle(width, height);
+//        rectangle_task.Rectangle rectangle = new rectangle_task.Rectangle(width, height);
 //        int s = rectangle.calcArea();
 //
 //        System.out.println("Площадь = " + s);
