@@ -1,5 +1,10 @@
 package student_task;
 
+//создать n студентов, отсортировать их по среднему баллу,
+// и вывести всех хороших, у кого оценки 4,5
+
+import com.bethecoder.ascii_table.ASCIITable;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -15,15 +20,60 @@ public class Main {
 
         System.out.println("Введите группу");
         int group = scanner.nextInt();
+//вводим оценки
+        System.out.println("Введите оценки студента через запятую");
+        String string = scanner.next();
+        String[] strings = string.split(",");
+        int[] marks = new int[strings.length];
+        for (int i = 0; i < strings.length; i++) {
+            marks[i] = Integer.parseInt(strings[i]);
+        }
 
-        //вводим оценки
-        Student student = new Student(name, surname, group, null);
+        Student student = new Student(name, surname, group, marks);
+
         return student;
     }
 
+    //функция сортировки по средней оценке
+    static void sortStudents(ArrayList<Student> students) {
+        for (int i = 0; i < students.size() - 1; i++) {
+            for (int j = 0; j < students.size() - i - 1; j++) {
+                Student tmp;
+                double d = students.get(j).calcAverage();
+                double d1 = students.get(j + 1).calcAverage();
+                if (d > d1) {
+                    tmp = students.get(j);
+                    students.set(j, students.get(j + 1));
+                    students.set(j + 1, tmp);
+                }
+            }
+        }
+    }
+
     //функция вывода на экран
-    //функция сортировки по средней оценки
+    static void print(ArrayList<Student> students) {
+        String[] tableHeaders = {"Имя", "Фамилия", "Группа", "Оценки", "Средняя оценка"};
+        String[][] tableData = new String[students.size()][tableHeaders.length];
+        for (int i = 0; i < students.size(); i++) {
+            tableData[i][0] = students.get(i).getName();
+            tableData[i][1] = students.get(i).getSurname();
+            tableData[i][2] = String.valueOf(students.get(i).getGroup());
+            tableData[i][3] = students.get(i).marksString();
+            tableData[i][4] = String.valueOf(students.get(i).calcAverage());
+        }
+        ASCIITable.getInstance().printTable(tableHeaders, tableData);
+    }
+
     //функция поиска хороших студентов (возвращает новый список студентов)
+    static ArrayList<Student> findGoodStudents(ArrayList<Student> students) {
+        ArrayList<Student> goodStudents = new ArrayList<>();
+        for (int i = students.size() - 1; i >= 0; i--) {
+            if (students.get(i).checkGood()){
+                goodStudents.add(students.get(i));
+            }
+        }
+        return goodStudents;
+    }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -33,7 +83,10 @@ public class Main {
         int n = scanner.nextInt();
 
         for (int i = 0; i < n; i++) {
-
+            students.add(i, create());
         }
+        sortStudents(students);
+        ArrayList<Student> goodStudents = findGoodStudents(students);
+        print(students);
     }
 }

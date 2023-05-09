@@ -21,6 +21,15 @@ public class Main {
             System.out.println("W = " + rectangle.getWidth() + ", H = " + rectangle.getHeight());
         }
     }
+    static Rectangle findMax(ArrayList<Rectangle> rectangles){
+        Rectangle max = rectangles.get(0);
+        for (int i = 0; i < rectangles.size(); i++) {
+            if (rectangles.get(i).calcArea() > max.calcArea()){
+                max = rectangles.get(i);
+            }
+        }
+        return max;
+    }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -41,6 +50,8 @@ public class Main {
         int n = scanner.nextInt();
         fillList(rectangles, n);
         printList(rectangles);
+        Rectangle max = findMax(rectangles);
+        System.out.println("Самый большой = " + max.getWidth() + ", " + max.getHeight());
 
     }
 }

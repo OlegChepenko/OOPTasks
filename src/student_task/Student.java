@@ -45,4 +45,11 @@ public class Student {
         }
         return true;
     }
+    public String marksString(){
+        String s = "";
+        for (int mark : marks) {
+            s += mark + " ";
+        }
+        return s;
+    }
 }
