@@ -20,15 +20,22 @@ public class Main {
 
         System.out.println("Введите группу");
         int group = scanner.nextInt();
+        scanner.nextLine();
 //вводим оценки
-        System.out.println("Введите оценки студента через запятую");
-        String string = scanner.next();
-        String[] strings = string.split(",");
-        int[] marks = new int[strings.length];
-        for (int i = 0; i < strings.length; i++) {
-            marks[i] = Integer.parseInt(strings[i]);
+        ArrayList <Mark> marks = new ArrayList<>();
+        int n = 1;
+        while (n != 2) {
+            System.out.println("Введите предмет: ");
+            String subject = scanner.nextLine();
+            System.out.println("Введите оценку по этому предмету: ");
+            int markValue = scanner.nextInt();
+            scanner.nextLine();
+            Mark mark = new Mark(subject, markValue);
+            marks.add(mark);
+            System.out.println("Вы хотите продолжить вводить предметы и оценки? 1.Да, 2.Нет");
+            n = scanner.nextInt();
+            scanner.nextLine();
         }
-
         Student student = new Student(name, surname, group, marks);
 
         return student;
@@ -87,6 +94,6 @@ public class Main {
         }
         sortStudents(students);
         ArrayList<Student> goodStudents = findGoodStudents(students);
-        print(students);
+        print(goodStudents);
     }
 }
