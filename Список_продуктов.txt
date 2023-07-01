@@ -1,0 +1,22 @@
+[
+  {
+    "code": "ф",
+    "name": "ddd",
+    "price": 200,
+    "amount": 12,
+    "category": {
+      "name": "cat1"
+    },
+    "discount": 15
+  },
+  {
+    "code": "g",
+    "name": "bbb",
+    "price": 500,
+    "amount": 800,
+    "category": {
+      "name": "cat2"
+    },
+    "discount": 20
+  }
+]

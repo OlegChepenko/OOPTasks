@@ -5,15 +5,15 @@ import java.io.Serializable;
 public class Product implements Serializable {
     private String code;
     private String name;
-    private int cost;
-    private int count;
+    private int price;
+    private int amount;
     private Category category;
     private int discount;
 
-    public Product(String code, String name, int cost, int count, Category category, int discount) {
+    public Product(String code, String name, int price, int amount, Category category, int discount) {
         setName(name);
-        setCost(cost);
-        setCount(count);
+        setPrice(price);
+        setAmount(amount);
         this.code = code;
         setCategory(category);
         setDiscount(discount);
@@ -31,24 +31,24 @@ public class Product implements Serializable {
         this.name = name;
     }
 
-    public int getCost() {
-        return cost;
+    public int getPrice() {
+        return price;
     }
 
-    public void setCost(int cost) {
-        if (cost < 0)
+    public void setPrice(int price) {
+        if (price < 0)
             throw new IllegalArgumentException("Incorrect cost");
-        this.cost = cost;
+        this.price = price;
     }
 
-    public int getCount() {
-        return count;
+    public int getAmount() {
+        return amount;
     }
 
-    public void setCount(int count) {
-        if (count < 0)
+    public void setAmount(int amount) {
+        if (amount < 0)
             throw new IllegalArgumentException("Incorrect count");
-        this.count = count;
+        this.amount = amount;
     }
 
     public String getCode() {

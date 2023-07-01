@@ -4,10 +4,16 @@ package product_task;
 import com.bethecoder.ascii_table.ASCIITable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+//        String s = "adfasdfa";
+//        String b = "j;lk;lkj;";
+//        int n = s.compareTo(b);
+
         Scanner scanner = new Scanner(System.in);
         Shop shop = new Shop();
 
@@ -49,10 +55,15 @@ public class Main {
                     editProduct(shop);
                     break;
                 case 5:
-                    printShopProducts(shop.sortByName());
+                    ArrayList<Product> p = sortProduct(shop);
+                    printShopProducts(p);
+                    break;
                 case 6:
+                    printCategoriesAndAmount(shop);
+                    break;
                 case 7:
-                case 8:
+                    System.out.println(shop.topCategory());
+                    break;
             }
         }
         while (n != 0);
@@ -100,11 +111,10 @@ public class Main {
                     System.out.println("Введите категорию");
                     int k = Integer.parseInt(scanner.nextLine());
                     category = shop.getCategories().get(k - 1);
-
+// TODO: 31.05.2023 нужна проверка, чтобы не вводили того, чего нет
                 }
             }
         }
-
         return new Product(code, name, cost, count, category, discount);
     }
     static Category addNewCategory(Shop shop){
@@ -124,8 +134,8 @@ public class Main {
         for (int i = 0; i < products.size(); i++) {
             tableData[i][0] = products.get(i).getCode();
             tableData[i][1] = products.get(i).getName();
-            tableData[i][2] = String.valueOf(products.get(i).getCost());
-            tableData[i][3] = String.valueOf(products.get(i).getCount());
+            tableData[i][2] = String.valueOf(products.get(i).getPrice());
+            tableData[i][3] = String.valueOf(products.get(i).getAmount());
             tableData[i][4] = String.valueOf(products.get(i).getCategory().getName());
         }
         ASCIITable.getInstance().printTable(tableHeaders, tableData);
@@ -136,7 +146,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Код продукта, который нужно удалить: ");
         String code = scanner.nextLine();
-        if (!shop.remooveProduct(code)) {
+        if (!shop.removeProduct(code)) {
             System.out.println("Такой продукт не найден");
         } else {
             System.out.println("Продукт удален");
@@ -152,8 +162,8 @@ public class Main {
         Product product = shop.findProduct(code);
         if (product != null) {
             System.out.println("Вы хотите изменить продукт: ");
-            System.out.println("Код: " + product.getCode() + " Наименование: " + product.getName() + " Цена: " + product.getCost() + " Количество: "
-                    + product.getCount());
+            System.out.println("Код: " + product.getCode() + " Наименование: " + product.getName() + " Цена: " + product.getPrice() + " Количество: "
+                    + product.getAmount());
             System.out.println("1. Изменить наименование");
             System.out.println("2. Изменить цену");
             System.out.println("3. Изменить количество");
@@ -169,12 +179,12 @@ public class Main {
                 case 2:
                     System.out.println("Введите новую цену ");
                     int cost = Integer.parseInt(scanner.nextLine());
-                    product.setCost(cost);
+                    product.setPrice(cost);
                     break;
                 case 3:
                     System.out.println("Введите новое количество");
                     int count = Integer.parseInt(scanner.nextLine());
-                    product.setCount(count);
+                    product.setAmount(count);
                 case 4:
                     System.out.println("Введите новую категорию");
                     String category = scanner.nextLine();
@@ -188,7 +198,7 @@ public class Main {
         }
     }
 
-    static void sortProduct(Shop shop) {
+    static ArrayList<Product> sortProduct(Shop shop) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("По какому признаку провести сортировку? ");
         System.out.println("1. По имени");
@@ -198,7 +208,24 @@ public class Main {
         System.out.println("5. По количеству");
         System.out.println("6. По скидке");
         int n = Integer.parseInt(scanner.nextLine());
-        SortType type = SortType.values()[n];
-//        ByName, ByCode, ByCategory, ByCost, ByCount, ByDiscount
+        SortType type = SortType.values()[n-1];
+        ArrayList<Product> products = shop.sort(type);
+//        ByName, ByCode, ByCategory, ByPrice, ByAmount, ByDiscount
+       return products;
     }
+
+    static void printCategoriesAndAmount(Shop shop){
+        HashMap<String, Integer> map = shop.sumOfCategories();
+        String[] tableHeaders = {"Категория", "Количество"};
+        String[][] tableData = new String[map.size()][tableHeaders.length];
+        int i = 0;
+        for (Map.Entry<String, Integer> cat : map.entrySet()) {
+            tableData[i][0] = cat.getKey();
+            tableData[i][1] = String.valueOf(cat.getValue());
+            i++;
+        }
+            ASCIITable.getInstance().printTable(tableHeaders, tableData);
+
+    }
+
 }
