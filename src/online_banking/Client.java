@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Client {
     private String fullName;
@@ -20,6 +21,10 @@ public class Client {
         this.password = password;
         accounts = new ArrayList<>();
         transactions = new ArrayList<>();
+    }
+
+    public void addTransaction(Transaction transaction){
+        transactions.add(transaction);
     }
 
     public void addAccount(Account account) {
@@ -80,6 +85,12 @@ public class Client {
             return true;
         }
         return false;
+    }
+    public Account findAccount(String number){
+        Optional<Account> account = accounts.stream().filter(a ->a.getNumber().equals(number)).findFirst();
+        if (account.isPresent()){
+            return account.get();
+        }else return null;
     }
 //    public void writeTransfer(){
 //      try (BufferedWriter writer = new BufferedWriter(new FileWriter("online_banking_transfers.txt"))){

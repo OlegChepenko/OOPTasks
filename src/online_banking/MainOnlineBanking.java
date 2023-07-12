@@ -1,6 +1,8 @@
 package online_banking;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class MainOnlineBanking {
@@ -39,12 +41,13 @@ public class MainOnlineBanking {
 
             String clientFullName = client.getFullName();
             System.out.println("Welcome, " + clientFullName);
+            fillTransactionList(client);
             while (true) {
                 System.out.println("1 ‑ list accounts");
                 System.out.println("2 ‑ transfer money");
                 System.out.println("3 ‑ open a new account");
-                System.out.println("4 ‑ logout");
-                System.out.println("5 - showTransaction");
+                System.out.println("4 - showTransaction");
+                System.out.println("5 ‑ logout");
                 try {
                     int action = Integer.parseInt(scanner.nextLine());
                     if (action == 1) {
@@ -57,6 +60,9 @@ public class MainOnlineBanking {
                         saveFile(clients);
                         showAccounts(client);
                     } else if (action == 4) {
+                        showTransaction(client);
+                    }
+                    else if (action == 5) {
                         break;
                     }
                 } catch (Exception exc) {
@@ -65,11 +71,41 @@ public class MainOnlineBanking {
             }
         }
     }
+    //--------------------------------------------
+    static void showTransaction(Client client){
+        for (Transaction t : client.getTransactions()) {
+            System.out.println("Со счета: " + t.getSrc().getNumber() + " на счет: " + t.getDestination().getNumber() + " переведена сумма: " + t.getSum()
+            + " дата перевода: " + t.getDate() + " тип операции: " + t.getTypeOperation());
+        }
+
+    }
+    //---------------------------------------------
+    static void fillTransactionList(Client client){
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("online_banking_transfers.txt"))){
+            String line;
+            while ((line = reader.readLine()) != null){
+                String[] s = line.split(";");
+
+                if (client.getPhone().equals(s[0])){
+                    Account from = client.findAccount(s[1]);
+                    Account to = client.findAccount(s[2]);
+                    LocalDateTime dateTime = LocalDateTime.parse(s[4]);
+                    TypeOperation typeOperation = TypeOperation.valueOf(s[5]);
+                    Transaction transaction = new Transaction(from, to,Integer.parseInt(s[3]), dateTime, typeOperation, client );
+                    client.addTransaction(transaction);
+                }
+            }
+        }catch (IOException exception){
+            System.out.println("Ошибка при чтении транзакции из файла");
+        }
+    }
     //---------------------------------------------
     static void writeTransfer(Client client){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("online_banking_transfers.txt", true))){
             Transaction t = client.getTransactions().get(client.getTransactions().size()-1);
-                writer.write(t.getSrc().getNumber() + ";" + t.getDestination().getNumber() + ";" + t.getSum() + ";" + t.getDate() + ";" + t.getTypeOperation());
+                writer.write(t.getClient().getPhone() + ";" + t.getSrc().getNumber() + ";" + t.getDestination().getNumber() + ";" +
+                        t.getSum() + ";" + t.getDate() + ";" + t.getTypeOperation());
                 writer.newLine();
 
         }catch (IOException exception){
