@@ -1,6 +1,8 @@
 package delivery_system;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Courier {
@@ -20,7 +22,10 @@ public class Courier {
         isAvailable = true;
         orders = new ArrayList<>();
     }
-
+    public void addOrder(Order order){
+//        addOrder(order);
+        orders.add(order);
+    }
     public String getName() {
         return name;
     }
@@ -47,5 +52,12 @@ public class Courier {
 
     public void setAvailable(boolean available) {
         isAvailable = available;
+    }
+
+    public List<Order> ordersToday(){
+       return orders.stream().filter(t -> t.getStartDelivery().toLocalDate().equals(LocalDate.now())).toList();
+    }
+    public int countOrdersToday(){
+        return ordersToday().size();
     }
 }
